@@ -65,8 +65,8 @@ app.use(function (req, res, next) {
           res.send("User Registered");
         })
         .catch((err) => {
-          var error = err.message;
-          res.send(error.slice(38));
+         
+          res.send(err.message);
         });
     }
   });
