@@ -121,14 +121,7 @@ app.use(function (req, res, next) {
   
     const data = new products.find();
   
-      data
-        .save()
-        .then(() => {
-          res.send(data);
-        })
-        .catch((err) => {
-          res.send(err);
-        });
+     res.send(data)
 
   })
 
