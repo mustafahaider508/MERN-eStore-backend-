@@ -117,9 +117,9 @@ app.use(function (req, res, next) {
 
 
 
-  app.get("/getproducts",(req,res)=>{
+  app.get("/getproducts", async(req,res)=>{
   
-    const data = new products.find();
+    const data = await products.find()
   
      res.send(data)
 
