@@ -124,7 +124,29 @@ app.use(function (req, res, next) {
      res.send(data)
 
   })
+  app.post("/updateproduct/:id", async (req, res) => {
+      const id = req.params.id;
+      const data = req.body;
+      const result = await products.findByIdAndUpdate(id, data, { new: true });
+      res.json({
+        status: "succes",
+        result,
+      });
+  
+  
+  });
 
 
+  app.post("/delete/:id", async (req, res) => {
+    const id = req.params.id;
+    const data = req.body;
+    const result = await products.findByIdAndDelete(id);
+    res.json({
+      status: " delete succes",
+      result,
+    });
+
+
+});
 
 app.listen(process.env.PORT ||5000,()=>{console.log("server is on!!!!")})
