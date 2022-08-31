@@ -7,13 +7,13 @@ const mongo = require("mongoose");
 const registrationSchema = require("./models/registration");
 const products = require("./models/products");
 require("dotenv").config();
-
+app.use(cors())
 //middileware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-app.use(cors())
+
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
