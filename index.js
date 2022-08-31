@@ -52,7 +52,8 @@ app.use(function (req, res, next) {
     }
     //  else if (req.body.password != req.body.cpassword) {
     //   res.send("Enter same password");
-    // } else 
+    //}
+     else 
     {
       const data = new registrationSchema();
       data.username = req.body.username;
