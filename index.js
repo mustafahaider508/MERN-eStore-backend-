@@ -49,9 +49,11 @@ app.use(function (req, res, next) {
   
     if (data1.length == 1) {
       res.send("This Email is already exist");
-    } else if (req.body.password != req.body.cpassword) {
-      res.send("Enter same password");
-    } else {
+    }
+    //  else if (req.body.password != req.body.cpassword) {
+    //   res.send("Enter same password");
+    // } else 
+    {
       const data = new registrationSchema();
       data.username = req.body.username;
       data.email = req.body.email;
