@@ -109,8 +109,7 @@ app.use(function (req, res, next) {
           res.send("Product Added");
         })
         .catch((err) => {
-          var error = err.message;
-          res.send(error.slice(38));
+          res.send(err);
         });
 
   })
