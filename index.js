@@ -115,4 +115,24 @@ app.use(function (req, res, next) {
 
   })
 
+
+
+  app.get("/getproducts",(req,res)=>{
+    console.log(req.body)
+
+    const data = new products.find();
+  
+      data
+        .save()
+        .then(() => {
+          res.send(data);
+        })
+        .catch((err) => {
+          res.send(err);
+        });
+
+  })
+
+
+
 app.listen(process.env.PORT ||5000,()=>{console.log("server is on!!!!")})
