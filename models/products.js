@@ -39,7 +39,7 @@ const products=mongo.Schema({
         
     },
     productimage:{
-        type:String,
+        type:[Object],
         require:[true,"Please fill the image field"],
         trim:true,
         minlength:[3,"Minimum three letters required"], 

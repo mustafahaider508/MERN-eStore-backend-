@@ -1,4 +1,5 @@
 const express=require("express")
+const multer=require("multer")
 const app=express();
 const cors=require("cors")
 const bodyParser=require("body-parser");
@@ -7,13 +8,13 @@ const mongo = require("mongoose");
 const registrationSchema = require("./models/registration");
 const products = require("./models/products");
 require("dotenv").config();
-app.use(cors())
+
 //middileware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
+app.use(cors())
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
@@ -49,12 +50,9 @@ app.use(function (req, res, next) {
   
     if (data1.length == 1) {
       res.send("This Email is already exist");
-    }
-    //  else if (req.body.password != req.body.cpassword) {
-    //   res.send("Enter same password");
-    //}
-     else 
-    {
+    } else if (req.body.password != req.body.cpassword) {
+      res.send("Enter same password");
+    } else {
       const data = new registrationSchema();
       data.username = req.body.username;
       data.email = req.body.email;
@@ -66,8 +64,8 @@ app.use(function (req, res, next) {
           res.send("User Registered");
         })
         .catch((err) => {
-         
-          res.send(err.message);
+          var error = err.message;
+          res.send(error.slice(38));
         });
     }
   });
@@ -91,10 +89,21 @@ app.use(function (req, res, next) {
       });
     }
   });
-
-  app.post("/products",(req,res)=>{
+// multer import multer from "multer";
+const storage = multer.diskStorage({
+  destination: "uploads",
+  filename: (req, file, callB) => {
+    return callB(null, `img-${Date.now()}.${file.mimetype.split("/")[1]}`);
+  },
+});
+ const uploadFile = multer({
+  storage: storage,
+});
+  app.post("/products",uploadFile.fields([
+    { name: "productimage", maxCount: 1 },
+  ]),(req,res)=>{
     console.log(req.body)
-
+    const productimage = req.files.productimage.map((it) => it.filename);
     const data = new products();
       data.gender = req.body.gender;
       data.category = req.body.category;
@@ -102,7 +111,7 @@ app.use(function (req, res, next) {
       data.price = req.body.price;
       data.discription = req.body.discription;
       data.title = req.body.title;
-      data.productimage = req.body.productimage;
+      data.productimage = productimage;
   
       data
         .save()
@@ -110,43 +119,15 @@ app.use(function (req, res, next) {
           res.send("Product Added");
         })
         .catch((err) => {
-          res.send(err);
+          var error = err.message;
+          res.send(error.slice(38));
         });
 
   })
 
-
-
-  app.get("/getproducts", async(req,res)=>{
-  
-    const data = await products.find()
-  
-     res.send(data)
-
+  app.get("/getproduct", async(req,res)=>{
+    var product= await products.find()
+    res.send(product)
   })
-  app.post("/updateproduct/:id", async (req, res) => {
-      const id = req.params.id;
-      const data = req.body;
-      const result = await products.findByIdAndUpdate(id, data, { new: true });
-      res.json({
-        status: "succes",
-        result,
-      });
-  
-  
-  });
-
-
-  app.post("/delete/:id", async (req, res) => {
-    const id = req.params.id;
-    const data = req.body;
-    const result = await products.findByIdAndDelete(id);
-    res.json({
-      status: " delete succes",
-      result,
-    });
-
-
-});
 
 app.listen(process.env.PORT ||5000,()=>{console.log("server is on!!!!")})
