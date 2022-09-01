@@ -2,6 +2,7 @@ const express=require("express")
 const multer=require("multer")
 const app=express();
 const cors=require("cors")
+const cloudinary=require("cloudinary")
 const bodyParser=require("body-parser");
 require("dotenv").config();
 const mongo = require("mongoose");
@@ -9,6 +10,12 @@ const registrationSchema = require("./models/registration");
 const products = require("./models/products");
 require("dotenv").config();
 
+
+cloudinary.config({
+  cloud_name:process.env.CLOUD_NAME ,
+  api_key:process.env.API_ID,
+  api_secret:process.env.API_SECARET,
+}) 
 //middileware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -99,11 +106,11 @@ const storage = multer.diskStorage({
  const uploadFile = multer({
   storage: storage,
 });
-  app.post("/products",uploadFile.fields([
-    { name: "productimage", maxCount: 1 },
-  ]),(req,res)=>{
-    console.log(req.body)
-    const productimage = req.files.productimage.map((it) => it.filename);
+  app.post("/products",uploadFile.array("productimage"), async(req,res)=>{
+    console.log(req.files)
+  //  const productimage = req.files.productimage.map((it) => it.filename);
+    const result = await cloudinary.v2.uploader.upload(req.files[0].path,(err)=>{console.log(err)})
+    console.log(result)
     const data = new products();
       data.gender = req.body.gender;
       data.category = req.body.category;
@@ -111,7 +118,7 @@ const storage = multer.diskStorage({
       data.price = req.body.price;
       data.discription = req.body.discription;
       data.title = req.body.title;
-      data.productimage = productimage;
+      data.productimage = result.url;
   
       data
         .save()
