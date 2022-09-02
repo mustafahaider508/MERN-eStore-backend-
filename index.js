@@ -105,10 +105,11 @@ const storage = multer.diskStorage({
  const uploadFile = multer({
   storage: storage,
 });
-  app.post("/products",uploadFile.array("productimage"), async(req,res)=>{
-    console.log(req.files)
-  //  const productimage = req.files.productimage.map((it) => it.filename);
-    const result = await cloudinary.v2.uploader.upload(req.files[0].path,(err)=>{console.log(err)})
+  app.post("/products",uploadFile.single("productimage"), async(req,res)=>{
+    console.log(req.file)
+    console.log(req.body)
+   // const productimage = req.files.productimage.map((it) => it.filename);
+    const result = await cloudinary.v2.uploader.upload(req.file.path,(err)=>{console.log(err)})
     console.log(result)
     const data = new products();
       data.gender = req.body.gender;
