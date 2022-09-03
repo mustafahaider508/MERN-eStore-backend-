@@ -118,7 +118,7 @@ const storage = multer.diskStorage({
   productimage : result.url
       
     });
-     
+     res.send(data)
 
   })
 
