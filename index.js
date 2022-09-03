@@ -21,6 +21,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -107,28 +109,16 @@ const storage = multer.diskStorage({
 });
   app.post("/products",uploadFile.single("productimage"), async(req,res)=>{
     console.log(req.file)
-    console.log(req.body)
+    console.log(Object.keys(req.body))
+    //console.log(req.file)
    // const productimage = req.files.productimage.map((it) => it.filename);
-    const result = await cloudinary.v2.uploader.upload(req.file.path,(err)=>{console.log(err)})
-    console.log(result)
-    const data = new products();
-      data.gender = req.body.gender;
-      data.category = req.body.category;
-      data.subcategory = req.body.subcategory;
-      data.price = req.body.price;
-      data.discription = req.body.discription;
-      data.title = req.body.title;
-      data.productimage = result.url;
-  
-      data
-        .save()
-        .then(() => {
-          res.send("Product Added");
-        })
-        .catch((err) => {
-          var error = err.message;
-          res.send(error.slice(38));
-        });
+    const result = await cloudinary.v2.uploader.upload(req.file.path)
+    //console.log(result)
+    const data = await  products.create({...req.body,
+  productimage : result.url
+      
+    });
+     
 
   })
 
@@ -137,4 +127,12 @@ const storage = multer.diskStorage({
     res.send(product)
   })
 
+
+  app.post("/delete/:id",async(req,res)=>{
+
+    console.log(req.params.id)
+  
+   await products.findByIdAndDelete(req.params.id).then(()=>{res.send({msg:"delete"})}).catch(()=>{res.send("not delete")})
+  })
+  
 app.listen(process.env.PORT ||5000,()=>{console.log("server is on!!!!")})
