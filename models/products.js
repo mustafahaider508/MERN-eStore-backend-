@@ -7,7 +7,7 @@ const products=mongo.Schema({
         require:[true,"Please fill the gender field"],
         trim:true,
         minlength:[3,"Minimum three letters required"], 
-        maxlength:15,
+        
         
         
     },
@@ -16,7 +16,6 @@ const products=mongo.Schema({
         require:[true,"Please fill the category field"],
         trim:true,
         minlength:[3,"Minimum three letters required"], 
-        maxlength:15,
         
         
     },
@@ -25,7 +24,6 @@ const products=mongo.Schema({
         require:[true,"Please fill the category field"],
         trim:true,
         minlength:[3,"Minimum three letters required"], 
-        maxlength:15,
         
         
     },
